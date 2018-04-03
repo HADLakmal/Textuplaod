@@ -20,11 +20,14 @@ G.add_edge('f','d',weight=0.7)
 G.add_edge('e','f',weight=0.8)
 G.add_edge('e','d',weight=0.6)
 """
-G.add_edge('a','d',weight=0)
-G.add_edge('c','f',weight=0)
+
 G.add_edge('f','d',weight=0.3)
 G.add_edge('e','f',weight=0.3)
 G.add_edge('e','d',weight=0.3)
+
+G.add_edge('f','g',weight=1)
+G.add_edge('g','h',weight=0.1)
+G.add_edge('e','h',weight=1)
 
 A = nx.adjacency_matrix(G)
 #define zero matrix
@@ -67,7 +70,6 @@ for i in range(0,eigenVectors.shape[0]):
     for j in range(0,eigenVectors.shape[1]):
         total += eigenVectors.item((i,j))**2
     z[i]=+z[i]/(total**(1/2))
-print(z)
 
 #find k means paritions
 kmeans = KMeans(n_clusters=k, random_state=0).fit(z)
@@ -85,24 +87,18 @@ partitionArray = []
 for k in array:
     A = nx.laplacian_matrix(G, nodelist = k)
     tempEigenvalues, tempEigenvectors = np.linalg.eig(A.toarray())
-    #sort = tempEigenvalues.argsort()
-    sort = tempEigenvalues
-
-    if(sort.size>1):
+    sort = tempEigenvalues.argsort()
+    #sort = tempEigenvalues
+    
+    if(sort.size>2):
         if 0 in sort:
             counter=collections.Counter(sort)
-            print(list(counter.values())[0])
-            p = list(counter.values())[0]
-            if(sort.size==list(counter.values())[0]):
-                kmeans = KMeans(n_clusters=p, random_state=0).fit(tempEigenvectors)
-                lables = kmeans.labels_
-                arrays = Handler.indexArray(k,p,lables)
-                partitionArray.append(arrays)
-            else:
-                kmeans = KMeans(n_clusters=p+1, random_state=0).fit(tempEigenvectors)
-                lables = kmeans.labels_
-                arrays = Handler.indexArray(k,p+1,lables)
-                partitionArray.append(arrays)
+            p = list(counter.values())[-1]
+            kmeans = KMeans(n_clusters=p+1, random_state=0).fit(tempEigenvectors[:,[list(tempEigenvalues).index(0)]])
+            lables = kmeans.labels_
+            arrays = Handler.indexArray(k,p+1,lables)
+            for i in arrays:
+                partitionArray.append(i)
         else:
             partitionArray.append(k)
     else:
@@ -110,6 +106,28 @@ for k in array:
 
 print(partitionArray)
 
+
+pos=nx.spring_layout(G)
+# edges
+nx.draw_networkx_edges(G,pos,
+                        width=6)
+# labels
+nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
+
+nx.draw_networkx_nodes(G,pos,node_size=700)
+plt.show()
+
+"""
+for i in partitionArray:
+
+    nx.draw_networkx_nodes(G,pos,nodelist=i,node_size=700)
+    nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
+    nx.draw_networkx_edges(G,pos,nodelist = i,
+                        width=6)
+    
+    
+    plt.show()
+"""
 '''
 elarge=[(u,v) for (u,v,d) in G.edges(data=True) if d['weight'] >0.7]
 esmall=[(u,v) for (u,v,d) in G.edges(data=True) if d['weight'] <=0.7]
