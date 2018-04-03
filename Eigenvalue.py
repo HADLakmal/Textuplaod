@@ -34,9 +34,14 @@ for i in range(len(eigenvalues)):
    print(...)
 """
 
+print(G.node()
+        
+
+"""
 A = nx.laplacian_matrix(G, nodelist = ['a', 'b', 'f','d','e'])
 eigenvalues, eigenvectors = np.linalg.eig(A.toarray())
 
 
 print(eigenvalues)
 print(eigenvectors)
+"""

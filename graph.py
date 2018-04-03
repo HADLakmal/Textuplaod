@@ -5,6 +5,8 @@ import numpy as np
 from numpy.linalg import norm
 from sklearn.preprocessing import normalize
 from sklearn.cluster import KMeans
+from handler import Handler
+import collections
 
 G=nx.Graph()
 
@@ -53,15 +55,10 @@ eigenvalues, eigenvectors = np.linalg.eig(M)
 #define K
 k=3
 tempEigenValues = np.absolute(eigenvalues)
-print(tempEigenValues)
 idx = tempEigenValues.argsort()[:k][::]
-print(idx)
-print(eigenvectors)
 eigenValues = tempEigenValues[idx]
 eigenVectors = eigenvectors[:,idx]
 
-print(...)
-print("Second tuple of eig\n", eigenVectors)
 
 z = eigenVectors
 #normalize the matrix
@@ -72,9 +69,46 @@ for i in range(0,eigenVectors.shape[0]):
     z[i]=+z[i]/(total**(1/2))
 print(z)
 
+#find k means paritions
 kmeans = KMeans(n_clusters=k, random_state=0).fit(z)
 
 print(kmeans.labels_)
+
+lables = kmeans.labels_
+
+array = Handler.indexArray(G.nodes(),k,lables)
+print(array)
+
+#New partition array
+partitionArray = []
+# get each laplacian matrix
+for k in array:
+    A = nx.laplacian_matrix(G, nodelist = k)
+    tempEigenvalues, tempEigenvectors = np.linalg.eig(A.toarray())
+    #sort = tempEigenvalues.argsort()
+    sort = tempEigenvalues
+
+    if(sort.size>1):
+        if 0 in sort:
+            counter=collections.Counter(sort)
+            print(list(counter.values())[0])
+            p = list(counter.values())[0]
+            if(sort.size==list(counter.values())[0]):
+                kmeans = KMeans(n_clusters=p, random_state=0).fit(tempEigenvectors)
+                lables = kmeans.labels_
+                arrays = Handler.indexArray(k,p,lables)
+                partitionArray.append(arrays)
+            else:
+                kmeans = KMeans(n_clusters=p+1, random_state=0).fit(tempEigenvectors)
+                lables = kmeans.labels_
+                arrays = Handler.indexArray(k,p+1,lables)
+                partitionArray.append(arrays)
+        else:
+            partitionArray.append(k)
+    else:
+        partitionArray.append(k)
+
+print(partitionArray)
 
 '''
 elarge=[(u,v) for (u,v,d) in G.edges(data=True) if d['weight'] >0.7]
