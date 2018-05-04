@@ -19,3 +19,21 @@ class Handler:
                         array[r].append(a)
                         break
         return array
+    def alphaCut(A):
+        #define zero matrix
+        degree = np.zeros((A.shape[0],A.shape[0]))
+        #define ones matrix
+        oneMatrix = np.ones((A.shape[0],A.shape[0]))
+        #get sum of row
+        rowsum = A.sum(axis=0)
+        #create degree matrix
+        for j in range(0, A.shape[0]):
+            degree[j,j] = rowsum[0,j]
+        #Get alpha cut matrix
+        maltiply = np.matmul(oneMatrix.transpose(), degree)
+
+        numerator = np.matmul(maltiply.transpose(),maltiply)
+        denominator = np.matmul(maltiply,oneMatrix)
+        value = np.subtract(numerator,denominator)
+        return value-A
+
