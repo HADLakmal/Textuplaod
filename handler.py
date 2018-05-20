@@ -19,7 +19,7 @@ class Handler:
                         array[r].append(a)
                         break
         return array
-    def alphaCut(A):
+    def alphaCut(A,adjecency):
         #define zero matrix
         degree = np.zeros((A.shape[0],A.shape[0]))
         #define ones matrix
@@ -28,7 +28,10 @@ class Handler:
         rowsum = A.sum(axis=0)
         #create degree matrix
         for j in range(0, A.shape[0]):
-            degree[j,j] = rowsum[0,j]
+            if(adjecency==1):
+                degree[j,j] = rowsum[0,j]
+            else:
+                degree[j,j] = rowsum[j]
         #Get alpha cut matrix
         maltiply = np.matmul(oneMatrix.transpose(), degree)
 
@@ -36,4 +39,24 @@ class Handler:
         denominator = np.matmul(maltiply,oneMatrix)
         value = np.subtract(numerator,denominator)
         return value-A
+    def conectivityMatrix(partitionArray,G):
+        matrix = np.zeros((len(partitionArray),len(partitionArray)))
+        i = 0
+        for r in partitionArray:
+            for k in range(0,len(partitionArray)):
+                if(k>i):
+                    value = 0.0
+                    count = 0.0
+                    for c in r:
+                        for d in partitionArray[k]:
+                            #value+=float(G.get_edge_data(d,c)['weight'])
+                            if(G.get_edge_data(d,c) is not None):
+                                count+=1.0
+                                value+=G.get_edge_data(d,c)['weight']
+                    if(count!=0):
+                        matrix[i][k] = value/count
+                        matrix[k][i] = value/count
+
+            i+=1;
+        return matrix; 
 
