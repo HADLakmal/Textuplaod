@@ -33,11 +33,11 @@ class Handler:
             else:
                 degree[j,j] = rowsum[j]
         #Get alpha cut matrix
-        maltiply = np.matmul(oneMatrix.transpose(), degree,dtype=np.uint8)
+        maltiply = np.matmul(oneMatrix.transpose(), degree)
 
-        numerator = np.matmul(maltiply.transpose(),maltiply,dtype=np.uint8)
-        denominator = np.matmul(maltiply,oneMatrix,dtype=np.uint8)
-        value = np.subtract(numerator,denominator,dtype=np.uint8)
+        numerator = np.matmul(maltiply.transpose(),maltiply)
+        denominator = np.matmul(maltiply,oneMatrix)
+        value = np.subtract(numerator,denominator)
         return value-A
     def conectivityMatrix(partitionArray,G):
         matrix = np.zeros((len(partitionArray),len(partitionArray)),dtype=np.uint8)
