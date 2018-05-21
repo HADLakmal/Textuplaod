@@ -21,9 +21,9 @@ class Handler:
         return array
     def alphaCut(A,adjecency):
         #define zero matrix
-        degree = np.zeros((A.shape[0],A.shape[0]))
+        degree = np.zeros((A.shape[0],A.shape[0]),dtype=np.uint8)
         #define ones matrix
-        oneMatrix = np.ones((A.shape[0],A.shape[0]))
+        oneMatrix = np.ones((A.shape[0],A.shape[0]),dtype=np.uint8)
         #get sum of row
         rowsum = A.sum(axis=0)
         #create degree matrix
@@ -33,14 +33,14 @@ class Handler:
             else:
                 degree[j,j] = rowsum[j]
         #Get alpha cut matrix
-        maltiply = np.matmul(oneMatrix.transpose(), degree)
+        maltiply = np.matmul(oneMatrix.transpose(), degree,dtype=np.uint8)
 
-        numerator = np.matmul(maltiply.transpose(),maltiply)
-        denominator = np.matmul(maltiply,oneMatrix)
-        value = np.subtract(numerator,denominator)
+        numerator = np.matmul(maltiply.transpose(),maltiply,dtype=np.uint8)
+        denominator = np.matmul(maltiply,oneMatrix,dtype=np.uint8)
+        value = np.subtract(numerator,denominator,dtype=np.uint8)
         return value-A
     def conectivityMatrix(partitionArray,G):
-        matrix = np.zeros((len(partitionArray),len(partitionArray)))
+        matrix = np.zeros((len(partitionArray),len(partitionArray)),dtype=np.uint8)
         i = 0
         for r in partitionArray:
             for k in range(0,len(partitionArray)):
