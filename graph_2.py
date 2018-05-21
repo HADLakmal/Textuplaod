@@ -55,7 +55,8 @@ for i in range(0,eigenVectors.shape[0]):
     total = 0
     for j in range(0,eigenVectors.shape[1]):
         total += eigenVectors.item((i,j))**2
-    z[i]=+z[i]/(total**(1/2))
+    if(total!=0):
+        z[i]=+z[i]/(total**(1/2))
 
 #find k means paritions
 kmeans = KMeans(n_clusters=partitionSize, random_state=0).fit(z)
