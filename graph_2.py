@@ -160,7 +160,7 @@ for p in part:
     partition.append(partTemp)
     print(partTemp)
 
-np.savetxt('test.out', partition)
+np.savetxt('test.out', partition,fmt='%r')
 
 
 """
