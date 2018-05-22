@@ -11,7 +11,7 @@ import queue
 
 
 
-G = nx.read_graphml("CombinedMinimizedGraph.graphml")
+G = nx.read_graphml("CombinedMinimizedGraph.graphml",node_type=<type 'uint8'>)
 
 """
 G=nx.Graph()
