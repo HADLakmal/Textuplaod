@@ -10,8 +10,11 @@ import collections
 import queue
 
 
+H = nx.read_graphml("CombinedMinimizedGraph.graphml")
+array = list(H.nodes())
 
-G = nx.read_graphml("CombinedMinimizedGraph.graphml",node_type=<type 'uint8'>)
+G = H.subgraph(array[10:30])
+
 
 """
 G=nx.Graph()
@@ -31,6 +34,7 @@ G.add_edge('g','h',weight=0.1)
 G.add_edge('e','h',weight=1)
 
 """
+
 #print(nx.adjacency_matrix(G,nodelist = ['c','e']).todense())
 A = nx.adjacency_matrix(G)
 
@@ -54,8 +58,8 @@ z = eigenVectors
 for i in range(0,eigenVectors.shape[0]):
     total = 0
     for j in range(0,eigenVectors.shape[1]):
-        total += eigenVectors.item((i,j))**2
-    if(total!=0):
+        total += abs(eigenVectors.item((i,j)))**2
+    if(total>0):
         z[i]=+z[i]/(total**(1/2))
 
 #find k means paritions
@@ -78,7 +82,6 @@ for k in array:
     if(sort.size>2):
         if 0 in tempEigenvectors:
             counter=collections.Counter(sort)
-            print(counter)
             p = list(counter.values())[-1]
             kmeans = KMeans(n_clusters=p+1, random_state=0).fit(tempEigenvectors[:,[list(tempEigenvalues).index(0)]])
             lables = kmeans.labels_
@@ -90,7 +93,6 @@ for k in array:
     else:
         partitionArray.append(k)
 
-print(partitionArray)
 
 
 matrix = Handler.conectivityMatrix(partitionArray,G)
@@ -147,7 +149,15 @@ while(partitionCount!=partitionSize):
 
 
 
-print(part)
+partition = []
+for p in part:
+    print("asda")
+    partTemp = []
+    for par in p:
+        for part in par:
+            partTemp.append(part)
+
+print(partition)
 
 
 """
@@ -177,25 +187,4 @@ for i in partitionArray:
     plt.show()
 
 """
-'''
-elarge=[(u,v) for (u,v,d) in G.edges(data=True) if d['weight'] >0.7]
-esmall=[(u,v) for (u,v,d) in G.edges(data=True) if d['weight'] <=0.7]
 
-pos=nx.spring_layout(G) # positions for all nodes
-
-# nodes
-nx.draw_networkx_nodes(G,pos,node_size=700)
-
-# edges
-nx.draw_networkx_edges(G,pos,edgelist=elarge,
-                    width=6)
-nx.draw_networkx_edges(G,pos,edgelist=esmall,
-                    width=6,alpha=0.5,edge_color='b',style='dashed')
-
-# labels
-nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
-
-plt.axis('off')
-plt.savefig("weighted_graph.png") # save as png
-plt.show() # display
-'''
