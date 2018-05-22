@@ -13,7 +13,7 @@ import queue
 H = nx.read_graphml("CombinedMinimizedGraph.graphml")
 array = list(H.nodes())
 
-G = H.subgraph(array[:6000])
+G = H.subgraph(array[:8000])
 
 
 """
