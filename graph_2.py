@@ -13,7 +13,7 @@ import queue
 H = nx.read_graphml("CombinedMinimizedGraph.graphml")
 array = list(H.nodes())
 
-G = H.subgraph(array[10:30])
+G = H.subgraph(array[:2000])
 
 
 """
@@ -123,8 +123,9 @@ while(partitionCount!=partitionSize):
             for i in range(0,eigenVectors.shape[0]):
                 total = 0
                 for j in range(0,eigenVectors.shape[1]):
-                    total += eigenVectors.item((i,j))**2
-                z[i]=+z[i]/(total**(1/2))
+                    total += abs(eigenVectors.item((i,j)))**2
+                if(total>0):
+                    z[i]=+z[i]/(total**(1/2))
 
             #find k means paritions
             kmeans = KMeans(n_clusters=2, random_state=0).fit(z)
@@ -156,8 +157,9 @@ for p in part:
     for par in p:
         for part in par:
             partTemp.append(part)
+    partition.append(partTemp)
+    print(partTemp)
 
-print(partition)
 
 
 """
