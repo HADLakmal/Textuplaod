@@ -52,7 +52,7 @@ M = Handler.alphaCut(A,1)
 eigenvalues, eigenvectors = np.linalg.eig(M)
 
 #define K
-partitionSize=6
+partitionSize=2
 tempEigenValues = np.absolute(eigenvalues)
 idx = tempEigenValues.argsort()[:partitionSize][::]
 eigenValues = tempEigenValues[idx]
