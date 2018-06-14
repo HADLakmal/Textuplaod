@@ -10,10 +10,16 @@ import collections
 import queue
 
 
-H = nx.read_graphml("CombinedMinimizedGraph.graphml")
-array = list(H.nodes())
+H = nx.read_graphml("file\graph.graphml.xml")
+print(len(H.nodes()))
+H = nx.read_edgelist('file\edges.txt', nodetype=int, data=(('weight',float),))
 
-G = H.subgraph(array[:8000])
+
+print(H.size(weight='weight'))
+print(H.edges(675748905,data='weight'))
+array = list(H.nodes())
+print(len(array))
+G = H.subgraph(array[:])
 
 
 """
@@ -46,7 +52,7 @@ M = Handler.alphaCut(A,1)
 eigenvalues, eigenvectors = np.linalg.eig(M)
 
 #define K
-partitionSize=3
+partitionSize=6
 tempEigenValues = np.absolute(eigenvalues)
 idx = tempEigenValues.argsort()[:partitionSize][::]
 eigenValues = tempEigenValues[idx]
@@ -152,15 +158,13 @@ while(partitionCount!=partitionSize):
 
 partition = []
 for p in part:
-    print("asda")
     partTemp = []
     for par in p:
         for part in par:
             partTemp.append(part)
     partition.append(partTemp)
-    print(partTemp)
 
-np.savetxt('test.txt', partition,fmt='%r')
+np.savetxt('test_3.txt', partition,fmt='%r')
 
 
 """
