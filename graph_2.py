@@ -10,9 +10,9 @@ import collections
 import queue
 
 
-H = nx.read_graphml("file\graph.graphml.xml")
+H = nx.read_graphml("graph.graphml.xml")
 print(len(H.nodes()))
-H = nx.read_edgelist('file\edges.txt', nodetype=int, data=(('weight',float),))
+H = nx.read_edgelist('edges.txt', nodetype=int, data=(('weight',float),))
 
 
 print(H.size(weight='weight'))
