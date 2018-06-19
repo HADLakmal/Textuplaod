@@ -18,7 +18,7 @@ print(H.size(weight='weight'))
 print(H.edges(675748905,data='weight'))
 array = list(H.nodes())
 print(len(array))
-G = H.subgraph(array[:1000])
+G = H.subgraph(array[:])
 
 """
 G=nx.Graph()
