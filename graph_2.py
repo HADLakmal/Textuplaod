@@ -10,17 +10,15 @@ import collections
 import queue
 
 
-H = nx.read_graphml("graph.graphml.xml")
-print(len(H.nodes()))
-H = nx.read_edgelist('edges.txt', nodetype=int, data=(('weight',float),))
+#H = nx.read_graphml("graph.graphml.xml")
+H = nx.read_edgelist('edges.txt',nodetype=int, data=(('weight',float),))
 
 
 print(H.size(weight='weight'))
 print(H.edges(675748905,data='weight'))
 array = list(H.nodes())
 print(len(array))
-G = H.subgraph(array[:])
-
+G = H.subgraph(array[:1000])
 
 """
 G=nx.Graph()
@@ -52,7 +50,7 @@ M = Handler.alphaCut(A,1)
 eigenvalues, eigenvectors = np.linalg.eig(M)
 
 #define K
-partitionSize=2
+partitionSize=3
 tempEigenValues = np.absolute(eigenvalues)
 idx = tempEigenValues.argsort()[:partitionSize][::]
 eigenValues = tempEigenValues[idx]
@@ -101,7 +99,8 @@ for k in array:
 
 
 
-matrix = Handler.conectivityMatrix(partitionArray,G)
+matrix,edgecut1 = Handler.conectivityMatrix(partitionArray,G)
+edgecut2 = 0
 q = queue.Queue()
 partitionQueue = queue.Queue();
 partitionQueue.put(partitionArray);
@@ -146,15 +145,18 @@ while(partitionCount!=partitionSize):
                 w+=1
             partitionQueue.put(p1)
             partitionQueue.put(p2)
-            q.put(Handler.conectivityMatrix(p1,G))
-            q.put(Handler.conectivityMatrix(p2,G))
+            put1,tempedge1 = Handler.conectivityMatrix(p1,G)
+            put2,tempedge2 = Handler.conectivityMatrix(p2,G)
+            edgecut2+=tempedge1+tempedge2
+            q.put(put1)
+            q.put(put2)
             part.pop(0)
             part.append(p1)
             part.append(p2)
         
     partitionCount+=1
 
-
+print(edgecut1-edgecut2)
 
 partition = []
 for p in part:
@@ -167,28 +169,28 @@ for p in part:
 np.savetxt('test_3.txt', partition,fmt='%r')
 
 
-"""
 
+"""
 pos=nx.spring_layout(G)
 # edges
 nx.draw_networkx_edges(G,pos,
-                        width=6)
+                        width=1)
 # labels
-nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
+nx.draw_networkx_labels(G,pos,font_size=2,font_family='sans-serif')
 
-nx.draw_networkx_nodes(G,pos,node_size=700)
+nx.draw_networkx_nodes(G,pos,node_size=1)
 plt.show()
 
 
 #show partitioning nodes
 
-for i in partitionArray:
+for i in partition:
 
     
-    nx.draw_networkx_nodes(G,pos,nodelist=i,node_size=700)
-    nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
+    nx.draw_networkx_nodes(G,pos,nodelist=i,node_size=1)
+    nx.draw_networkx_labels(G,pos,font_size=2,font_family='sans-serif')
     nx.draw_networkx_edges(G,pos,nodelist = i,
-                        width=6)
+                        width=1)
     
     
     plt.show()

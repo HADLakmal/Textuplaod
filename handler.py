@@ -42,6 +42,7 @@ class Handler:
     def conectivityMatrix(partitionArray,G):
         matrix = np.zeros((len(partitionArray),len(partitionArray)),dtype=np.uint8)
         i = 0
+        edgecut = 0
         for r in partitionArray:
             for k in range(0,len(partitionArray)):
                 if(k>i):
@@ -54,9 +55,10 @@ class Handler:
                                 count+=1.0
                                 value+=G.get_edge_data(d,c)['weight']
                     if(count!=0):
+                        edgecut+=value
                         matrix[i][k] = value/count
                         matrix[k][i] = value/count
 
             i+=1;
-        return matrix; 
+        return matrix,edgecut; 
 
